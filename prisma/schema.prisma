@@ -35,7 +35,6 @@ model User {
   name        String
   email       String
   password    String
-  sexe        String
   phone       String
   role        Role          @default(CLIENT)
   created_at  DateTime      @default(now())

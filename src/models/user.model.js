@@ -8,7 +8,6 @@ class User {
         this.name = name;
         this.email = email;
         this.password = password;
-        this.sexe = sexe;
         this.phone = phone;
         this.role = role;
         this.created_at = created_at;
@@ -33,6 +32,8 @@ class User {
         if (data.password) {
             data.password = await bcrypt.hashPassword(data.password);
         }
+        console.log(data);
+        
         const newUser = await prisma.user.create({ data });
         return User.fromPrisma(newUser);
     }

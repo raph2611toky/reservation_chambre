@@ -148,7 +148,7 @@ router.get("/profile", authMiddleware, getUser);
  *                 id: "123"
  *                 name: "Jean Dupont"
  *                 email: "jean.dupont@example.com"
- *                 phone: "0601020304"
+ *                 phone: "+261382030415"
  *                 role: "CLIENT"
  *                 created_at: "2025-03-04T10:00:00.000Z"
  *                 updated_at: "2025-03-04T10:00:00.000Z"

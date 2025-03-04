@@ -1,5 +1,7 @@
 const { body } = require("express-validator");
 
+const phoneRegex = /^(?:\+?\d{1,3})?[-.\s]?\(?\d{1,4}\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,4}$/;
+
 const createUserValidationRules = [
   body("name")
     .notEmpty()
@@ -19,15 +21,10 @@ const createUserValidationRules = [
     .isLength({ min: 6 })
     .withMessage("Le mot de passe doit contenir au moins 6 caractères"),
 
-  body("sexe")
-    .optional()
-    .isIn(["HOMME", "FEMME"])
-    .withMessage("Le sexe doit être soit 'HOMME' soit 'FEMME'"),
-
   body("phone")
     .notEmpty()
     .withMessage("Le téléphone est requis")
-    .isMobilePhone()
+    .matches(phoneRegex)
     .withMessage("Le numéro de téléphone n'est pas valide"),
 
   body("role")
@@ -53,14 +50,9 @@ const updateUserValidationRules = [
     .isLength({ min: 6 })
     .withMessage("Le mot de passe doit contenir au moins 6 caractères"),
 
-  body("sexe")
-    .optional()
-    .isIn(["HOMME", "FEMME"])
-    .withMessage("Le sexe doit être soit 'HOMME' soit 'FEMME'"),
-
   body("phone")
     .optional()
-    .isMobilePhone()
+    .matches(phoneRegex)
     .withMessage("Le numéro de téléphone n'est pas valide"),
 
   body("role")
