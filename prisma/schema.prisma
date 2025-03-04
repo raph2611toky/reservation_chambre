@@ -13,31 +13,51 @@ enum Role {
   ADMIN
 }
 
+enum StatutReservation {
+  ATTENTE
+  CONFIRME
+  ANNULER
+}
+
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
-
-model Rooms {
-  id            String    @id @default(uuid())
-  label         String
-  description   String
-  tarif         Float
-  category      String
-  visit_url     String?
-  created_at    DateTime  @default(now())
-  updated_at    DateTime  @updatedAt
+model Room {
+  id          Int           @id @default(autoincrement())
+  label       String        @unique
+  description String
+  tarif       Float
+  category    String
+  visit_url   String?
+  created_at  DateTime      @default(now())
+  updated_at  DateTime      @updatedAt
+  Reservation Reservation[]
 }
 
 model User {
-  id            Int    @id @default(autoincrement())
-  name          String
-  email         String
-  password      String
-  sexe          String
-  phone         String
-  role          Role  @default(CLIENT)
-  created_at    DateTime  @default(now())
-  updated_at    DateTime  @updatedAt
+  id          Int           @id @default(autoincrement())
+  name        String
+  email       String
+  password    String
+  sexe        String
+  phone       String
+  role        Role          @default(CLIENT)
+  created_at  DateTime      @default(now())
+  updated_at  DateTime      @updatedAt
+  reservation Reservation[]
+}
+
+model Reservation {
+  id         Int               @id @default(autoincrement())
+  user       User              @relation(fields: [user_id], references: [id])
+  user_id    Int
+  room       Room              @relation(fields: [room_id], references: [id])
+  room_id    Int
+  date_debut DateTime
+  date_fin   DateTime
+  status     StatutReservation @default(ATTENTE)
+  created_at DateTime          @default(now())
+  updated_at DateTime          @updatedAt
 }
