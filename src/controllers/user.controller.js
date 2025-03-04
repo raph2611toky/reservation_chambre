@@ -27,11 +27,14 @@ exports.getUser = async (req, res) => {
 
 exports.register = async (req, res) => {
     try {
-        console.log(req.body);
+        const user = await User.findByEmail(req.body.email);
+        if (user) {
+            return res.status(401).json({ error: "Cet utilisateur s'est dejà enregistré" });
+        }
         const newUser = await User.create(req.body);
         const token = generateToken({ id: newUser.id, role: newUser.role });
 
-        res.status(201).json({ user: newUser, token });
+        res.status(201).json({ email: newUser.email, token });
     } catch (error) {
         console.error("Erreur lors de la création de l'utilisateur:", error);
         res.status(500).json({ error: "Erreur interne du serveur" });
@@ -48,7 +51,7 @@ exports.login = async (req, res) => {
         }
 
         const token = generateToken({ id: user.id, role: user.role });
-        res.status(200).json({ user, token });
+        res.status(200).json({ name: user.name, token });
     } catch (error) {
         console.error("Erreur lors de la connexion:", error);
         res.status(500).json({ error: "Erreur interne du serveur" });

@@ -144,21 +144,14 @@ router.get("/profile", authMiddleware, getUser);
  *         content:
  *           application/json:
  *             example:
- *               user:
- *                 id: "123"
- *                 name: "Jean Dupont"
- *                 email: "jean.dupont@example.com"
- *                 phone: "+261382030415"
- *                 role: "CLIENT"
- *                 created_at: "2025-03-04T10:00:00.000Z"
- *                 updated_at: "2025-03-04T10:00:00.000Z"
+ *               email: "jean.dupont@example.com"
  *               token: "eyJhbGciOi..."
  *       400:
  *         description: Erreur de validation
  *         content:
  *           application/json:
  *             example:
- *               error: "L'email est déjà utilisé"
+ *               error: "Cet utilisateur s'est dejà enregistré"
  */
 router.post("/register", createUserValidationRules, validateHandler, register);
 
@@ -188,10 +181,7 @@ router.post("/register", createUserValidationRules, validateHandler, register);
  *         content:
  *           application/json:
  *             example:
- *               user:
- *                 id: "123"
- *                 name: "Jean Dupont"
- *                 email: "jean.dupont@example.com"
+ *               name: "Jean Dupont"
  *               token: "eyJhbGciOi..."
  *       401:
  *         description: Identifiants invalides
