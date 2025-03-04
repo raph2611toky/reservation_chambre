@@ -13,7 +13,7 @@ const {
     updateUserValidationRules 
 } = require("../validators/user.validator");
 const validateHandler = require("../middlewares/error.handler");
-const authMiddleware = require("../middlewares/auth.middleware");
+const { IsAuthenticated, IsAuthenticatedAdmin } = require("../middlewares/auth.middleware");
 
 /**
  * @swagger
@@ -25,6 +25,11 @@ const authMiddleware = require("../middlewares/auth.middleware");
 /**
  * @swagger
  * components:
+ *   securitySchemes:
+ *     BearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
  *   schemas:
  *     User:
  *       type: object
@@ -91,7 +96,7 @@ const authMiddleware = require("../middlewares/auth.middleware");
  *             example:
  *               error: "Erreur interne du serveur"
  */
-router.get("/", authMiddleware, getAllUsers);
+router.get("/", IsAuthenticatedAdmin, getAllUsers);
 
 /**
  * @swagger
@@ -124,7 +129,7 @@ router.get("/", authMiddleware, getAllUsers);
  *             example:
  *               error: "Erreur interne du serveur"
  */
-router.get("/profile", authMiddleware, getUser);
+router.get("/profile", IsAuthenticated, getUser);
 
 /**
  * @swagger
@@ -206,12 +211,6 @@ router.post("/login", login);
  *     tags: [Users]
  *     security:
  *       - BearerAuth: []
- *     parameters:
- *       - name: id
- *         in: path
- *         required: true
- *         schema:
- *           type: string
  *     requestBody:
  *       required: true
  *       content:
@@ -240,7 +239,7 @@ router.post("/login", login);
  *             example:
  *               error: "Erreur interne du serveur"
  */
-router.put("/change", authMiddleware, updateUserValidationRules, validateHandler, updateUser);
+router.put("/change", IsAuthenticated, updateUserValidationRules, validateHandler, updateUser);
    
 /**
  * @swagger
@@ -260,6 +259,6 @@ router.put("/change", authMiddleware, updateUserValidationRules, validateHandler
  *             example:
  *               error: "Erreur interne du serveur"
  */
-router.delete("/delete", authMiddleware, deleteAccount);
+router.delete("/delete", IsAuthenticated, deleteAccount);
 
 module.exports = router;

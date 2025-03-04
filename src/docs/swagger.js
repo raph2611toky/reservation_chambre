@@ -9,6 +9,15 @@ const options = {
       version: "1.0.0",
     },
   },
+  components: {
+    securitySchemes: {
+      BearerAuth: {
+        type: "http",
+        scheme: "bearer",
+        bearerFormat: "JWT",
+      },
+    },
+  },
   apis: ["./src/routes/*.js"], 
 };
 
