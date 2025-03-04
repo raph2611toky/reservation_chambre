@@ -205,4 +205,123 @@ router.delete("/:id", roomController.deleteRoom);
 router.get("/filter", roomController.getFilterRoomByCategory);
 
 
+/**
+ * @swagger
+ * /api/rooms/is-available/{id}:
+ *   post:
+ *     summary: Obtenir si une chambre est disponible entre une intervalle de temps 
+ *     tags: [Rooms]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID du chambre à vérifier
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               start_date:
+ *                 type: string
+ *                 format: date-time
+ *                 example: "2025-03-04T12:00:00Z"
+ *               end_date:
+ *                 type: string
+ *                 format: date-time
+ *                 nullable: true
+ *                 example: "2025-03-05T12:00:00Z"
+ *             required:
+ *               - start_date
+ *               - end_date
+ *     responses:
+ *       200:
+ *         description: Success Action
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: boolean
+ */
+router.post("/is-available/:id", roomController.isRoomAvaible);
+
+
+/**
+ * @swagger
+ * /api/rooms/availability:
+ *   post:
+ *     summary: Recherche des chambres disponibles pendant une intervalles de temps  
+ *     tags: [Rooms]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               start_date:
+ *                 type: string
+ *                 format: date-time
+ *                 example: "2025-03-04T12:00:00Z"
+ *               end_date:
+ *                 type: string
+ *                 format: date-time
+ *                 nullable: true
+ *                 example: "2025-03-05T12:00:00Z"
+ *             required:
+ *               - start_date
+ *               - end_date
+ *     responses:
+ *       200:
+ *         description: Liste des chambres disponible
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Room'
+ */
+router.post("/availability", roomController.getAvailableRooms);
+
+
+/**
+ * @swagger
+ * /api/rooms/planning/{id}:
+ *   post:
+ *     summary: Obtenir le planning de disponibilité d'un chambre à une date 
+ *     tags: [Rooms]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID du chambre à vérifier
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               date:
+ *                 type: string
+ *                 format: date-time
+ *                 example: "2025-03-04T12:00:00Z"
+ *             required:
+ *               - date
+ *     responses:
+ *       200:
+ *         description: Planing du chambre dans la date
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Room'
+ */
+router.post("/planning/:id", roomController.getRoomSchedule);
+
 module.exports = router;

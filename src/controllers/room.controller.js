@@ -56,3 +56,38 @@ exports.getFilterRoomByCategory = async (req, res)=>{
     res.status(404).json({ error: "Chambre non trouvé" })
   }
 }
+
+exports.isRoomAvaible = async (req, res)=>{
+  try {
+    const isAvalaible = await roomService.isAvailable(parseInt(req.params.id),req.body.start_date,req.body.end_date)
+    res.json(isAvalaible);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Erreur serveur", message : error });   
+  }
+}
+
+
+exports.getAvailableRooms = async (req, res)=>{
+  try {
+    const rooms = await roomService.getAvailableRooms(req.body.start_date,req.body.end_date)
+    res.json(rooms);
+    
+  } catch (error) {
+    // console.log(error);
+    res.status(500).json({ error: "Erreur serveur", error });   
+    
+  }
+}
+
+
+exports.getRoomSchedule = async (req, res)=>{
+  try {
+    const rooms = await roomService.getRoomSchedule(parseInt(req.params.id),req.body.date)
+    res.json(rooms);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Erreur serveur", error});       
+  }
+} 
+
