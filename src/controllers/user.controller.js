@@ -27,6 +27,7 @@ exports.getUser = async (req, res) => {
 
 exports.register = async (req, res) => {
     try {
+        console.log(req.body);
         const newUser = await User.create(req.body);
         const token = generateToken({ id: newUser.id, role: newUser.role });
 

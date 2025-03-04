@@ -46,7 +46,7 @@ const authMiddleware = require("../middlewares/auth.middleware");
  *           description: Adresse email
  *         password:
  *           type: string
- *           description: Mot de passe hashé
+ *           description: Mot de passe
  *         phone:
  *           type: string
  *           description: Numéro de téléphone
@@ -54,14 +54,12 @@ const authMiddleware = require("../middlewares/auth.middleware");
  *           type: string
  *           enum: [CLIENT, ADMIN]
  *           description: Rôle de l'utilisateur
- *         created_at:
- *           type: string
- *           format: date-time
- *           description: Date de création
- *         updated_at:
- *           type: string
- *           format: date-time
- *           description: Date de mise à jour
+ *       example:
+ *         name: Jean Dupont
+ *         email: jean.dupont@example.com
+ *         password: motdepasse123
+ *         phone: "0601020304"
+ *         role: CLIENT
  */
 
 /**
@@ -75,6 +73,23 @@ const authMiddleware = require("../middlewares/auth.middleware");
  *     responses:
  *       200:
  *         description: Liste des utilisateurs
+ *         content:
+ *           application/json:
+ *             example:
+ *               users: [
+ *                 {
+ *                   id: "123",
+ *                   name: "Jean Dupont",
+ *                   email: "jean.dupont@example.com",
+ *                   phone: "+216 34 26 156 20"
+ *                 }
+ *               ]
+ *       500:
+ *         description: Erreur interne du serveur
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Erreur interne du serveur"
  */
 router.get("/", authMiddleware, getAllUsers);
 
@@ -82,22 +97,32 @@ router.get("/", authMiddleware, getAllUsers);
  * @swagger
  * /api/users/profile:
  *   get:
- *     summary: Récupérer un utilisateur par ID
+ *     summary: Récupérer le profil de l'utilisateur connecté
  *     tags: [Users]
  *     security:
  *       - BearerAuth: []
- *     parameters:
- *       - name: id
- *         in: path
- *         required: true
- *         schema:
- *           type: string
- *         description: ID de l'utilisateur
  *     responses:
  *       200:
- *         description: Détails de l'utilisateur
+ *         description: Profil de l'utilisateur
+ *         content:
+ *           application/json:
+ *             example:
+ *               id: "123"
+ *               name: "Jean Dupont"
+ *               email: "jean.dupont@example.com"
+ *               phone: "+261 32 16 125 47"
  *       404:
- *         description: Utilisateur non trouvé
+ *         description: Profil non trouvé
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Profil non trouvé"
+ *       500:
+ *         description: Erreur interne du serveur
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Erreur interne du serveur"
  */
 router.get("/profile", authMiddleware, getUser);
 
@@ -116,10 +141,72 @@ router.get("/profile", authMiddleware, getUser);
  *     responses:
  *       201:
  *         description: Utilisateur créé avec succès
+ *         content:
+ *           application/json:
+ *             example:
+ *               user:
+ *                 id: "123"
+ *                 name: "Jean Dupont"
+ *                 email: "jean.dupont@example.com"
+ *                 phone: "+261382030415"
+ *                 role: "CLIENT"
+ *                 created_at: "2025-03-04T10:00:00.000Z"
+ *                 updated_at: "2025-03-04T10:00:00.000Z"
+ *               token: "eyJhbGciOi..."
  *       400:
  *         description: Erreur de validation
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "L'email est déjà utilisé"
  */
 router.post("/register", createUserValidationRules, validateHandler, register);
+
+/**
+ * @swagger
+ * /api/users/login:
+ *   post:
+ *     summary: Connexion de l'utilisateur
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Connexion réussie
+ *         content:
+ *           application/json:
+ *             example:
+ *               user:
+ *                 id: "123"
+ *                 name: "Jean Dupont"
+ *                 email: "jean.dupont@example.com"
+ *               token: "eyJhbGciOi..."
+ *       401:
+ *         description: Identifiants invalides
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Identifiants invalides"
+ *       500:
+ *         description: Erreur interne du serveur
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Erreur interne du serveur"
+ */
+router.post("/login", login);
 
 /**
  * @swagger
@@ -144,8 +231,24 @@ router.post("/register", createUserValidationRules, validateHandler, register);
  *     responses:
  *       200:
  *         description: Utilisateur mis à jour avec succès
- *       404:
- *         description: Utilisateur non trouvé
+ *         content:
+ *           application/json:
+ *             example:
+ *               id: "123"
+ *               name: "Jean Dupont"
+ *               email: "jean.dupont@example.com"
+ *       400:
+ *         description: Données invalides
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Données invalides"
+ *       500:
+ *         description: Erreur interne du serveur
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Erreur interne du serveur"
  */
 router.put("/change", authMiddleware, updateUserValidationRules, validateHandler, updateUser);
    
@@ -153,22 +256,20 @@ router.put("/change", authMiddleware, updateUserValidationRules, validateHandler
  * @swagger
  * /api/users/delete:
  *   delete:
- *     summary: Supprimer un utilisateur
+ *     summary: Supprimer le compte de l'utilisateur connecté
  *     tags: [Users]
  *     security:
  *       - BearerAuth: []
- *     parameters:
- *       - name: id
- *         in: path
- *         required: true
- *         schema:
- *           type: string
  *     responses:
- *       200:
- *         description: Utilisateur supprimé avec succès
- *       404:
- *         description: Utilisateur non trouvé
+ *       204:
+ *         description: Compte supprimé avec succès
+ *       500:
+ *         description: Erreur interne du serveur
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Erreur interne du serveur"
  */
-router.delete("/delete", authMiddleware, deleteUser);
+router.delete("/delete", authMiddleware, deleteAccount);
 
 module.exports = router;
