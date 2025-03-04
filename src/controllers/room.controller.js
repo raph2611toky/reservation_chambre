@@ -1,4 +1,3 @@
-const { rooms } = require("../config/db");
 const roomService = require("../services/database/room.services");
 
 exports.getRooms = async (req, res) => {
