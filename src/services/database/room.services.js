@@ -1,6 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
-const Room = require("../../models/room.models");
+const Room = require("../../models/room.model");
 const { rooms } = require("../../config/db");
 
 class RoomService {
