@@ -75,7 +75,7 @@ const reservationController = require("../controllers/reservation.controller");
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/Rerservation'
+ *                 $ref: '#/components/schemas/Reservation'
  */
 router.get("/", reservationController.getAll);
 
@@ -85,6 +85,13 @@ router.get("/", reservationController.getAll);
  *   get:
  *     summary: Obtenir un reservation
  *     tags: [Reservations]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID du reservation 
  *     responses:
  *       200:
  *         description: Détails du reservation
@@ -93,7 +100,7 @@ router.get("/", reservationController.getAll);
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/Rerservation'
+ *                 $ref: '#/components/schemas/Reservation'
  */
 router.get("/find/:id", reservationController.getById);
 
@@ -161,6 +168,13 @@ router.put("/update/:id", reservationController.updateReservation);
  *   post:
  *     summary: Annuler une reservation
  *     tags: [Reservations]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID du reservation à annuler
  *     responses:
  *       200:
  *         description: Annuler une reservation
@@ -169,9 +183,9 @@ router.put("/update/:id", reservationController.updateReservation);
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/Rerservation'
+ *                 $ref: '#/components/schemas/Reservation'
  */
-router.post("/find/:id", reservationController.cancelReservation);
+router.post("/cancel/:id", reservationController.cancelReservation);
 
 
 module.exports = router;

@@ -1,4 +1,4 @@
-const { PrismaClient, Prisma } = require("@prisma/client");
+const { PrismaClient, Prisma, StatutReservation } = require("@prisma/client");
 const prisma = new PrismaClient();
 const Reservation = require("../../models/reservation.model");
 
@@ -26,8 +26,10 @@ class ReservationService {
   }
 
   async cancelRervation(id){
-    const canceledReservation = await prisma.reservation.update({ where: { id }}, {"status": prisma.reservation.fields.status} );
-    return new Reservation(canceledReservation.id, canceledReservation.user_id, canceledReservation.user, canceledReservation.room_id, canceledReservation.room, canceledReservation.status, updatedReservation.date_debut, updatedReservation.date_fin, updatedReservation.created_at, updatedReservation.updated_at);
+    const canceledReservation = await prisma.reservation.update({ 
+      where: { id }, 
+      data: {status: StatutReservation.ANNULER} });
+    return new Reservation(canceledReservation.id, canceledReservation.user_id, canceledReservation.user, canceledReservation.room_id, canceledReservation.room, canceledReservation.status, canceledReservation.date_debut, canceledReservation.date_fin, canceledReservation.created_at, canceledReservation.updated_at);
   }
 
 }

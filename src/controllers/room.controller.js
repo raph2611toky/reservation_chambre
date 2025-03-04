@@ -11,8 +11,8 @@ exports.getRooms = async (req, res) => {
 
 exports.getRoomById = async (req, res) => {
   try {
-    const room = await roomService.getRoomById(req.params.id);
-    if (!room) return res.status(404).json({ error: "Chambre non trouvé" });
+    const room = await roomService.getRoomById(parseInt(req.params.id));
+    if (!room) return res.status(404).json({ error: "Chambre non trouvé" });    
     res.json(room);
   } catch (error) {
     res.status(500).json({ error: "Erreur serveur" });
@@ -30,7 +30,7 @@ exports.createRoom = async (req, res) => {
 
 exports.updateRoom = async (req, res) => {
   try {
-    const room = await roomService.updateRoom(req.params.id, req.body);
+    const room = await roomService.updateRoom(parseInt(req.params.id), req.body);
     res.json(room);
   } catch (error) {
     res.status(404).json({ error: "Chambre non trouvé" });
@@ -39,7 +39,7 @@ exports.updateRoom = async (req, res) => {
 
 exports.deleteRoom = async (req, res) => {
   try {
-    await roomService.deleteRoom(req.params.id);
+    await roomService.deleteRoom(parseInt(req.params.id));
     res.json({ message: "Chambre supprimé" });
   } catch (error) {
     res.status(404).json({ error: "Chambre non trouvé" });
