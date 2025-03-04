@@ -49,8 +49,7 @@ exports.deleteRoom = async (req, res) => {
 
 exports.getFilterRoomByCategory = async (req, res)=>{
   try {
-    // console.log("in filter room controller");
-    rooms = await roomService.filterRoomByCategory();
+    const rooms = await roomService.filterRoomByCategory();
     res.json(rooms)
   } catch (error) {
     console.log(error);
