@@ -20,8 +20,8 @@ datasource db {
 
 
 model Rooms {
-  id            String    @id @default(uuid())
-  label         String
+  id            Int    @id @default(autoincrement())
+  label         String  @unique
   description   String
   tarif         Float
   category      String

@@ -1,6 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
-const Room = require("../../models/room.models");
+const Room = require("../../models/room.model");
 const { rooms } = require("../../config/db");
 
 class RoomService {
@@ -29,11 +29,28 @@ class RoomService {
     return await prisma.rooms.delete({ where: { id } });
   }
 
-  async filterRoomByCategory(){    
-    return await prisma.rooms.groupBy({
-      by: rooms.fields.category
-    })
+  async filterRoomByCategory() {
+    try {
+      const rooms = await prisma.rooms.findMany();
+
+      var res = {}; 
+
+      rooms.forEach(room => {
+          if (!res[room.category]) {
+            res[room.category] = []; 
+          }
+          res[room.category].push(room); 
+        });
+        
+      return res;
+
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
   }
+
+  
 }
 
 module.exports = new RoomService();

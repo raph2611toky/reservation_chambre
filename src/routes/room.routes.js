@@ -24,8 +24,8 @@ const validateHandler = require("../middlewares/error.handler");
  *         - category
  *       properties:
  *         id:
- *           type: string
- *           description: ID unique généré automatiquement
+ *           type: int
+ *           description: ID unique auto incrémente
  *         label:
  *           type: string
  *           description: Nom (ou identification) du chambre
@@ -51,7 +51,7 @@ const validateHandler = require("../middlewares/error.handler");
  *           format: date-time
  *           description: Date de mise à jour
  *       example:
- *         id: "123e4567-e89b-12d3-a456-426614174000"
+ *         id: 1
  *         label: "Chambre 001"
  *         description: "2 lits avec un baingoire, wifi et netflix"
  *         tarif: 99.99
@@ -202,7 +202,7 @@ router.delete("/:id", roomController.deleteRoom);
  *               items:
  *                 $ref: '#/components/schemas/Room'
  */
-router.get("/filter", roomController.getRooms);
+router.get("/filter", roomController.getFilterRoomByCategory);
 
 
 module.exports = router;
