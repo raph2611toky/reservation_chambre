@@ -1,5 +1,6 @@
 const bcrypt = require("../utils/securite/bcrypt");
-const prisma = require("../config/prisma");
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
 
 class User {
     constructor(id, name, email, password, sexe, phone, role = "CLIENT", created_at = null, updated_at = null) {
