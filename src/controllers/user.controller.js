@@ -33,8 +33,10 @@ exports.register = async (req, res) => {
         }
         const newUser = await User.create(req.body);
         const token = generateToken({ id: newUser.id, role: newUser.role });
+        console.log(token);
+        
 
-        res.status(201).json({ email: newUser.email, token });
+        res.status(201).json({ email: newUser.email, token});
     } catch (error) {
         console.error("Erreur lors de la création de l'utilisateur:", error);
         res.status(500).json({ error: "Erreur interne du serveur" });
