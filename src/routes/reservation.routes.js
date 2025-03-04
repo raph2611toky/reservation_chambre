@@ -84,7 +84,7 @@ router.get("/", reservationController.getAll);
  * /api/reservations/find/{id}:
  *   get:
  *     summary: Obtenir un reservation
- *     tags: [Reservation]
+ *     tags: [Reservations]
  *     responses:
  *       200:
  *         description: Détails du reservation
@@ -103,7 +103,7 @@ router.get("/find/:id", reservationController.getById);
  * /api/reservations/make:
  *   post:
  *     summary: Faire une reservation
- *     tags: [Rooms]
+ *     tags: [Reservations]
  *     requestBody:
  *       required: true
  *       content:

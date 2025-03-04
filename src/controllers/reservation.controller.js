@@ -25,7 +25,9 @@ exports.makeReservation = async (req, res)=>{
         res.status(201).json(reservation);
     }
     catch (error) {
-        res.status(400).json({ error: "Erreur de validation" });
+        console.log(error);
+        
+        res.status(500).json({ error: "Erreur de serveur" });
     }
 }
 
