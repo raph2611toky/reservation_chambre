@@ -123,6 +123,36 @@ router.post("/register", createUserValidationRules, validateHandler, register);
 
 /**
  * @swagger
+ * /api/users/login:
+ *   post:
+ *     summary: Connexion de l'utilisateur
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 description: Adresse email de l'utilisateur
+ *               password:
+ *                 type: string
+ *                 description: Mot de passe de l'utilisateur
+ *     responses:
+ *       200:
+ *         description: Connexion réussie avec le token JWT
+ *       401:
+ *         description: Identifiants invalides
+ */
+router.post("/login", login);
+
+/**
+ * @swagger
  * /api/users/change:
  *   put:
  *     summary: Mettre à jour un utilisateur
@@ -169,6 +199,6 @@ router.put("/change", authMiddleware, updateUserValidationRules, validateHandler
  *       404:
  *         description: Utilisateur non trouvé
  */
-router.delete("/delete", authMiddleware, deleteUser);
+router.delete("/delete", authMiddleware, deleteAccount);
 
 module.exports = router;
