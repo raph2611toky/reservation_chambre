@@ -23,6 +23,11 @@ class User {
         return user ? User.fromPrisma(user) : null;
     }
 
+    static async findByEmail(email) {
+        const user = await prisma.user.findUnique({ where: { email } });
+        return user ? User.fromPrisma(user) : null;
+    }
+
     static async getAll() {
         const users = await prisma.user.findMany();
         return users.map(User.fromPrisma);
@@ -48,6 +53,10 @@ class User {
 
     static async delete(id) {
         return await prisma.user.delete({ where: { id } });
+    }
+
+    static async comparePassword(password, hashPassword) {
+        return bcrypt.comparePassword(password, hashPassword)
     }
 }
 
