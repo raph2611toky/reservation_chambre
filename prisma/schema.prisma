@@ -10,14 +10,8 @@ enum Role {
 enum StatutReservation {
   ATTENTE
   CONFIRME
+  REFUSE
   ANNULER
-}
-
-enum NotificationType {
-  SMS
-  WHATSAPP
-  MESSENGER
-  MAIL
 }
 
 datasource db {
@@ -26,15 +20,15 @@ datasource db {
 }
 
 model Room {
-  id            Int            @id @default(autoincrement())
-  label         String         @unique
-  description   String
-  tarif         Float
-  category      String
-  visit_url     String?
-  created_at    DateTime       @default(now())
-  updated_at    DateTime       @updatedAt
-  Reservation   Reservation[]
+  id          Int           @id @default(autoincrement())
+  label       String        @unique
+  description String
+  tarif       Float
+  category    String
+  visit_url   String?
+  created_at  DateTime      @default(now())
+  updated_at  DateTime      @updatedAt
+  Reservation Reservation[]
 }
 
 model User {
@@ -44,7 +38,6 @@ model User {
   password     String
   phone        String
   role         Role           @default(CLIENT)
-  is_active    Boolean        @default(false)
   created_at   DateTime       @default(now())
   updated_at   DateTime       @updatedAt
   reservation  Reservation[]
@@ -62,14 +55,5 @@ model Reservation {
   status     StatutReservation @default(ATTENTE)
   created_at DateTime          @default(now())
   updated_at DateTime          @updatedAt
-}
-
-model Notification {
-  id          Int              @id @default(autoincrement())
-  receiver    User             @relation(fields: [receiver_id], references: [id])
-  receiver_id Int
-  type        NotificationType
-  contenu     String
-  created_at  DateTime         @default(now())
-  updated_at  DateTime         @updatedAt
+  montant    Float             @default(0)
 }

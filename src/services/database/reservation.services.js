@@ -32,6 +32,88 @@ class ReservationService {
     return new Reservation(canceledReservation.id, canceledReservation.user_id, canceledReservation.user, canceledReservation.room_id, canceledReservation.room, canceledReservation.status, canceledReservation.date_debut, canceledReservation.date_fin, canceledReservation.created_at, canceledReservation.updated_at);
   }
 
+  async getStats() {
+    try {
+      console.log("🚀 Début du calcul des statistiques...");
+
+      const reservations = await prisma.reservation.findMany({
+        select: {
+          status: true,
+          montant: true,
+          date_debut: true,
+          date_fin: true,
+          room: {
+            select: { id: true, label: true, category: true }
+          }
+        }
+      });
+
+      console.log("📊 Données des réservations récupérées:", reservations.length);
+
+      let total = 0, attente = 0, confirme = 0, refuse = 0, annuler = 0;
+      let totalIncome = 0;
+
+      const incomeByCategory = [];
+      const roomUsage = [];
+      const categoryMap = new Map();
+      const roomMap = new Map();
+
+      reservations.forEach((res) => {
+        total++;
+
+        switch (res.status) {
+          case "ATTENTE": attente++; break;
+          case "CONFIRME": confirme++; break;
+          case "REFUSE": refuse++; break;
+          case "ANNULER": annuler++; break;
+        }
+
+        if (res.status === "CONFIRME") {
+          totalIncome += res.montant || 0;
+
+          if (!categoryMap.has(res.room.category)) {
+            categoryMap.set(res.room.category, 0);
+          }
+          categoryMap.set(res.room.category, categoryMap.get(res.room.category) + res.montant);
+        }
+
+        const duree = (new Date(res.date_fin) - new Date(res.date_debut)) / (1000 * 60 * 60);
+        if (!roomMap.has(res.room.id)) {
+          roomMap.set(res.room.id, { totalHours: 0, label: res.room.label });
+        }
+        roomMap.get(res.room.id).totalHours += duree;
+      });
+
+      // console.log("✅ Statistiques calculées");
+
+      categoryMap.forEach((totalIncome, category) => {
+        incomeByCategory.push({ category, totalIncome });
+      });
+
+      roomMap.forEach((data) => {
+        roomUsage.push(data);
+      });
+
+      let mostUsedRoom = null, leastUsedRoom = null;
+      if (roomUsage.length > 0) {
+        mostUsedRoom = roomUsage.reduce((max, room) => (room.totalHours > max.totalHours ? room : max));
+        leastUsedRoom = roomUsage.reduce((min, room) => (room.totalHours < min.totalHours ? room : min));
+      }
+
+      // console.log("🚀 Fin de getStats, retour des données...");
+      return {
+        reservationStats: { total, attente, confirme, refuse, annuler },
+        incomeStats: { totalIncome, incomeByCategory },
+        roomStats: {
+          mostUsedRoom: mostUsedRoom ? { room: mostUsedRoom.label, totalHours: mostUsedRoom.totalHours } : null,
+          leastUsedRoom: leastUsedRoom ? { room: leastUsedRoom.label, totalHours: leastUsedRoom.totalHours } : null
+        }
+      }
+    } catch (error) {
+      console.error("❌ Erreur dans getStats:", error);
+      throw new Error("Erreur lors de la récupération des statistiques");
+    }
+  }
 }
 
 module.exports = new ReservationService();

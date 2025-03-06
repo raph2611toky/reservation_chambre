@@ -70,4 +70,6 @@ const updateRoomValidationRules = [
     
   ];
 
+  
+
 module.exports = { createRoomValidationRules, updateRoomValidationRules };

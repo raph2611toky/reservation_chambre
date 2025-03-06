@@ -1,3 +1,4 @@
+const roomServices = require("../services/database/room.services");
 const roomService = require("../services/database/room.services");
 
 exports.getRooms = async (req, res) => {
@@ -90,4 +91,16 @@ exports.getRoomSchedule = async (req, res)=>{
     res.status(500).json({ error: "Erreur serveur", error});       
   }
 } 
+
+exports.getRoomStats = async (req, res)=>{
+  try{
+    const stats = await roomServices.getStats();
+    res.json(stats)
+  }
+  catch(error)
+  {
+    console.log(error);
+    res.status(500).json({ error: "Erreur serveur", error});       
+  }
+}
 

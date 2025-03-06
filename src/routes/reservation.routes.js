@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const reservationController = require("../controllers/reservation.controller");
+const reservationServices = require("../services/database/reservation.services");
+const { IsAuthenticatedAdmin } = require("../middlewares/auth.middleware");
 // const { updateRoomValidationRules, createRoomValidationRules } = require("../validators/room.validator");
 // const validateHandler = require("../middlewares/error.handler");
 
@@ -24,23 +26,28 @@ const reservationController = require("../controllers/reservation.controller");
  *         - date_fin
  *       properties:
  *         id:
- *           type: int
- *           description: ID unique auto incrémente
+ *           type: integer
+ *           format: int64
+ *           description: ID unique auto-incrémenté
  *         user_id:
- *           type: int
- *           description: ID user     
+ *           type: integer
+ *           format: int64
+ *           description: ID de l'utilisateur     
  *         room_id:
- *           type: string
- *           description: ID du chambre
+ *           type: integer
+ *           format: int64
+ *           description: ID de la chambre
  *         date_debut:
- *           type: datetime
- *           description: Début reservation
+ *           type: string
+ *           format: date-time
+ *           description: Début de la réservation
  *         date_fin:
- *           type: datetime
- *           description: Fin reservation
+ *           type: string
+ *           format: date-time
+ *           description: Fin de la réservation
  *         status:
  *           type: string
- *           description: Status reservation
+ *           description: Statut de la réservation
  *         created_at:
  *           type: string
  *           format: date-time
@@ -53,12 +60,80 @@ const reservationController = require("../controllers/reservation.controller");
  *         id: 1
  *         user_id: 2
  *         room_id: 3
- *         status: ATTENTE
- *         date_debut: 2024-03-02T12:00:00Z
- *         date_fin: 2024-03-05T12:00:00Z
+ *         status: "ATTENTE"
+ *         date_debut: "2024-03-02T12:00:00Z"
+ *         date_fin: "2024-03-05T12:00:00Z"
  *         created_at: "2024-03-02T12:00:00Z"
  *         updated_at: "2024-03-02T12:00:00Z"
+ *         montant: 300
+ * 
+ *     ReservationStatsResponse:
+ *       type: object
+ *       properties:
+ *         reservationStats:
+ *           type: object
+ *           properties:
+ *             total:
+ *               type: integer
+ *               example: 200
+ *             attente:
+ *               type: integer
+ *               example: 30
+ *             confirme:
+ *               type: integer
+ *               example: 120
+ *             refuse:
+ *               type: integer
+ *               example: 20
+ *             annuler:
+ *               type: integer
+ *               example: 30
+ *         incomeStats:
+ *           type: object
+ *           properties:
+ *             totalIncome:
+ *                  type: number
+ *                  format: float
+ *                  example: 50000.00
+ *             incomeByCategory:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   category:
+ *                     type: string
+ *                     example: "Suite"
+ *                   totalIncome:
+ *                     type: number
+ *                     format: float
+ *                     example: 20000.00
+ *         roomStats:
+ *           type: object
+ *           properties:
+ *             mostUsedRoom:
+ *               type: object
+ *               nullable: true
+ *               properties:
+ *                 room:
+ *                   type: string
+ *                   example: "Suite 101"
+ *                 totalHours:
+ *                   type: number
+ *                   format: float
+ *                   example: 500.0
+ *             leastUsedRoom:
+ *               type: object
+ *               nullable: true
+ *               properties:
+ *                 room:
+ *                   type: string
+ *                   example: "Chambre 303"
+ *                 totalHours:
+ *                   type: number
+ *                   format: float
+ *                   example: 50.0
  */
+
 
 
 /**
@@ -186,6 +261,30 @@ router.put("/update/:id", reservationController.updateReservation);
  *                 $ref: '#/components/schemas/Reservation'
  */
 router.post("/cancel/:id", reservationController.cancelReservation);
+
+
+/**
+ * @swagger
+ * /api/reservations/stats:
+ *   get:
+ *     summary: Obtenir les statistiques des réservations
+ *     tags: 
+ *       - Statistics
+ *     security:
+ *       - BearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Statistiques des réservations récupérées avec succès
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/ReservationStatsResponse"
+ *       401:
+ *         description: Non autorisé, jeton d'authentification manquant ou invalide
+ *       500:
+ *         description: Erreur interne du serveur
+ */
+router.get("/stats", IsAuthenticatedAdmin, reservationController.getStats);
 
 
 module.exports = router;
