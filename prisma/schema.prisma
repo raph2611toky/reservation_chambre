@@ -46,6 +46,7 @@ model User {
   phone        String
   role         Role           @default(CLIENT)
   is_active    Boolean        @default(false)
+  preferred_notification NotificationType @default(MAIL)
   created_at   DateTime       @default(now())
   updated_at   DateTime       @updatedAt
   reservation  Reservation[]
