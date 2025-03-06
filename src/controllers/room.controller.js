@@ -61,7 +61,7 @@ exports.getFilterRoomByCategory = async (req, res)=>{
 exports.isRoomAvaible = async (req, res)=>{
   try {
     const isAvalaible = await roomService.isAvailable(parseInt(req.params.id),req.body.start_date,req.body.end_date)
-    res.json(isAvalaible);
+    res.json({"isAvailable":isAvalaible});
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Erreur serveur", message : error });   

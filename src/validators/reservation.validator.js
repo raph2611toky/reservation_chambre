@@ -85,6 +85,19 @@ const reservationAttente = [
     })
 ]
 
+const roomAvailable = [
+    body("room_id")
+    .custom((value,{req})=>{
+        const isAvailable = roomServices.isAvailable(parseInt(value))
+        if(!isAvailable){
+            return false
+        }
+        return true
+    })
+    .withMessage("Le chambre n'est pas disponible dans cette intervalle de temps !")
+]
+
 module.exports = {
-    reservationRule, myReservationRule, reservationAttente, roomExist
+    reservationRule, myReservationRule, reservationAttente, 
+    roomExist, roomAvailable
 }

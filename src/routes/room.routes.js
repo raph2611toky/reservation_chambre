@@ -278,7 +278,11 @@ router.get("/filter", roomController.getFilterRoomByCategory);
  *         content:
  *           application/json:
  *             schema:
- *               type: boolean
+ *               type: object
+ *               properties:
+ *                 isAvailable:
+ *                   type: boolean
+ *                   example: true
  */
 router.post("/is-available/:id", roomController.isRoomAvaible);
 
