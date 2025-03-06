@@ -155,14 +155,14 @@ router.get("/profile", IsAuthenticated, getUser);
  *               email:
  *                 type: string
  *                 format: email
- *                 example: admin@example.com
+ *                 example: user@example.com
  *               password:
  *                 type: string
  *                 format: password
- *                 example: "Admin@123"
+ *                 example: "user@123"
  *               name:
  *                 type: string
- *                 example: "Admin User"
+ *                 example: "User"
  *               phone:
  *                 type: string
  *                 example: "+261341234567"
