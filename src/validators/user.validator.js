@@ -28,8 +28,7 @@ const createUserValidationRules = [
     .withMessage("Le numéro de téléphone n'est pas valide"),
 
   body("role")
-    .notEmpty()
-    .withMessage("Le rôle est requis")
+    .optional()
     .isIn(["CLIENT", "ADMIN"])
     .withMessage("Le rôle doit être soit 'CLIENT' soit 'ADMIN'")
 ];

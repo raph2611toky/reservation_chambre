@@ -41,7 +41,7 @@ module.exports.sendNotification = async function (id_user, message_to_send, titl
         if (emailIsSent) {
             await Notification.create({
                 receiver_id: user.id,
-                type: 'email',
+                type: 'MAIL',
                 contenu: message_to_send,
                 created_at: new Date(),
                 updated_at: new Date()
@@ -51,7 +51,7 @@ module.exports.sendNotification = async function (id_user, message_to_send, titl
         if (whatsappIsSent) {
             await Notification.create({
                 receiver_id: user.id,
-                type: 'whatshapp',
+                type: 'WHATSAPP',
                 contenu: message_to_send,
                 created_at: new Date(),
                 updated_at: new Date()
