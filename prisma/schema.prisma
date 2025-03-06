@@ -32,6 +32,7 @@ model Room {
 }
 
 model User {
+<<<<<<< HEAD
   id          Int           @id @default(autoincrement())
   name        String
   email       String
@@ -42,6 +43,19 @@ model User {
   created_at  DateTime      @default(now())
   updated_at  DateTime      @updatedAt
   reservation Reservation[]
+=======
+  id           Int            @id @default(autoincrement())
+  name         String
+  email        String         @unique
+  password     String
+  phone        String
+  role         Role           @default(CLIENT)
+  is_active    Boolean        @default(false)
+  created_at   DateTime       @default(now())
+  updated_at   DateTime       @updatedAt
+  reservation  Reservation[]
+  Notification Notification[]
+>>>>>>> dev-toky
 }
 
 model Reservation {

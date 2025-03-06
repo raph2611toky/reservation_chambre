@@ -58,6 +58,18 @@ class User {
     static async comparePassword(password, hashPassword) {
         return bcrypt.comparePassword(password, hashPassword)
     }
+
+    static async countAll() {
+        return prisma.user.count();
+    }
+
+    static async countByRole(role) {
+        return prisma.user.count({ where: { role } });
+    }
+
+    static async countActive() {
+        return prisma.user.count({ where: { is_active: true } });
+    }
 }
 
 module.exports = User;
