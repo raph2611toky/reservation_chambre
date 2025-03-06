@@ -142,3 +142,28 @@ exports.getUserNotifications = async (req, res) => {
         res.status(500).json({ error: "Erreur interne du serveur" });
     }
 };
+
+exports.updateNotificationPreference = async (req, res) => {
+    try {
+      const userId = req.user.id;
+      const { notificationType } = req.body;
+
+      const validTypes = ["SMS", "WHATSAPP", "MESSENGER", "MAIL"];
+      if (!validTypes.includes(notificationType)) {
+        return res.status(400).json({ error: "Type de notification non valide." });
+      }
+  
+      const updatedUser = await prisma.user.update({
+        where: { id: userId },
+        data: { preferred_notification: notificationType },
+      });
+  
+      return res.status(200).json({
+        message: "Préférence de notification mise à jour avec succès.",
+        preferred_notification: updatedUser.preferred_notification,
+      });
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour de la notification:", error);
+      return res.status(500).json({ error: "Erreur interne du serveur." });
+    }
+  };

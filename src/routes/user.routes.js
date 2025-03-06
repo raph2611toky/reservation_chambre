@@ -10,7 +10,8 @@ const {
     getUser,
     logout,
     getUserStats ,
-    getUserNotifications
+    getUserNotifications,
+    updateNotificationPreference
  } = require("../controllers/user.controller");
 const { 
     createUserValidationRules, 
@@ -409,5 +410,54 @@ router.get("/stats", IsAuthenticatedAdmin, getUserStats);
  *               error: "Erreur interne du serveur"
  */
 router.get("/notifications", IsAuthenticated, getUserNotifications);
+
+/**
+ * @swagger
+ * /api/users/notification-preference:
+ *   patch:
+ *     summary: Modifier la préférence de notification de l'utilisateur
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - notificationType
+ *             properties:
+ *               notificationType:
+ *                 type: string
+ *                 enum: [SMS, WHATSAPP, MESSENGER, MAIL]
+ *     responses:
+ *       200:
+ *         description: Préférence mise à jour avec succès
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: "Préférence de notification mise à jour avec succès"
+ *               preferred_notification: "WHATSAPP"
+ *       400:
+ *         description: Type de notification invalide
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Type de notification non valide"
+ *       401:
+ *         description: Non autorisé - Token invalide
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Token invalide ou expiré"
+ *       500:
+ *         description: Erreur serveur
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Erreur interne du serveur"
+ */
+router.patch("/notification-preference", IsAuthenticated, updateNotificationPreference);
 
 module.exports = router;
