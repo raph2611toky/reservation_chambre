@@ -11,7 +11,7 @@ async function sendWhatshapp(to_number, body_message){
             from: 'whatsapp:' + sender_number_twilio,
             to: 'whatsapp:' + to_number
         });
-        console.log("Message SID:", message.sid);
+        console.log("Whatsapp notification reussi.", message.sid);
         return true;
     }catch (e){
         console.log(e);

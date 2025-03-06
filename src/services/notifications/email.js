@@ -11,7 +11,6 @@ async function sendEmail(to, title = "Notification", username, message, logoUrl 
     });
 
     const number_twilio_canal = process.env.NUMBER_TWILIO_SENDER.substring(1);
-    console.log(number_twilio_canal);
     
     const whatsapp_link = `https://wa.me/${number_twilio_canal}?text=join%20poet-wheel`;
 
