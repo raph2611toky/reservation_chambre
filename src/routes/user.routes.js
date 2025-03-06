@@ -210,7 +210,7 @@ router.post("/register", createUserValidationRules, validateHandler, register);
  *       500:
  *         description: Erreur interne du serveur
  */
-router.post("/admin/register", authController.registerAdmin);
+router.post("/admin/register", registerAdmin);
 
 /**
  * @swagger
