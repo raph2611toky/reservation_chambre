@@ -382,7 +382,7 @@ router.get("/stats", IsAuthenticatedAdmin, getUserStats);
  *     summary: Récupère les notifications de l'utilisateur
  *     tags: [Users]
  *     security:
- *       - bearerAuth: []
+ *       - BearerAuth: []
  *     responses:
  *       200:
  *         description: Liste des notifications récupérée avec succès
