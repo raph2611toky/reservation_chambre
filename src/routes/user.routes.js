@@ -164,10 +164,10 @@ router.post("/register", createUserValidationRules, validateHandler, register);
 
 /**
  * @swagger
- * /admin/register:
+ * /api/users/admin/register:
  *   post:
  *     summary: Enregistrer un administrateur
- *     tags: [Authentification]
+ *     tags: [Users]
  *     requestBody:
  *       required: true
  *       content:
@@ -316,7 +316,7 @@ router.delete("/delete", IsAuthenticated, deleteAccount);
 /**
  * @swagger
  * /api/users/logout:
- *   post:
+ *   put:
  *     summary: Déconnexion de l'utilisateur
  *     tags: [Users]
  *     security:
