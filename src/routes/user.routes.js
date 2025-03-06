@@ -380,7 +380,7 @@ router.get("/stats", IsAuthenticatedAdmin, getUserStats);
  * /api/users/notifications:
  *   get:
  *     summary: Récupère les notifications de l'utilisateur
- *     tags: [User]
+ *     tags: [Users]
  *     security:
  *       - bearerAuth: []
  *     responses:
