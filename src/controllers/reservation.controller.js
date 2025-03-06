@@ -29,7 +29,7 @@ exports.makeReservation = async (req, res)=>{
         data.room_id= req.body.room_id
         data.date_debut= req.body.date_debut
         data.date_fin= req.body.date_fin
-        data.date_fin= parseInt(req.user.id)
+        data.user_id= parseInt(req.user.id)
         const reservation = await reservationService.makeReservation(data);
         res.status(201).json(reservation);
     }

@@ -355,7 +355,7 @@ router.put("/logout", IsAuthenticated, logout);
  *   get:
  *     summary: Récupérer les statistiques globales des utilisateurs
  *     description: Retourne le nombre total d'utilisateurs, le nombre d'admins, de clients et d'utilisateurs actifs.
- *     tags: [Users]
+ *     tags: [Statistics]
  *     security:
  *       - BearerAuth: []
  *     responses:
