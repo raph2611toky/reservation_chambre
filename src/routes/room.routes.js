@@ -117,7 +117,21 @@ router.get("/find/:id", roomController.getRoomById);
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Room'
+ *             type: object
+ *             properties:
+ *               label:
+ *                 type: string
+ *                 example: "Chambre 001"
+ *               description:
+ *                 type: string
+ *                 example: "2 lits avec une baignoire, wifi et Netflix"
+ *               tarif:
+ *                 type: number
+ *                 format: float
+ *                 example: 99.99
+ *               category:
+ *                 type: string
+ *                 example: "VIP"
  *     responses:
  *       201:
  *         description: Chambre créé avec succès
@@ -153,7 +167,21 @@ router.post("/",IsAuthenticatedAdmin,
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Room'
+ *             type: object
+ *             properties:
+ *               label:
+ *                 type: string
+ *                 example: "Chambre 001"
+ *               description:
+ *                 type: string
+ *                 example: "2 lits avec une baignoire, wifi et Netflix"
+ *               tarif:
+ *                 type: number
+ *                 format: float
+ *                 example: 99.99
+ *               category:
+ *                 type: string
+ *                 example: "VIP"
  *     responses:
  *       200:
  *         description: Chambre mis à jour
