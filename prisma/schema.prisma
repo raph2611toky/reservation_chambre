@@ -38,7 +38,6 @@ model User {
   password     String
   phone        String
   role         Role           @default(CLIENT)
-  is_active    Boolean        @default(false)
   created_at   DateTime       @default(now())
   updated_at   DateTime       @updatedAt
   reservation  Reservation[]
