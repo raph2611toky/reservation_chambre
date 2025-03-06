@@ -70,6 +70,13 @@ class User {
     static async countActive() {
         return prisma.user.count({ where: { is_active: true } });
     }
+
+    static async getNotifications(userId) {
+        return prisma.notification.findMany({
+            where: { receiver_id: userId },
+            orderBy: { created_at: 'desc' },
+        });
+    }
 }
 
 module.exports = User;

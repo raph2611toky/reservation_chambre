@@ -9,7 +9,8 @@ const {
     getAllUsers,
     getUser,
     logout,
-    getUserStats 
+    getUserStats ,
+    getUserNotifications
  } = require("../controllers/user.controller");
 const { 
     createUserValidationRules, 
@@ -372,5 +373,41 @@ router.put("/logout", IsAuthenticated, logout);
  *         description: Erreur interne du serveur
  */
 router.get("/stats", IsAuthenticatedAdmin, getUserStats);
+
+/**
+ * @swagger
+ * /api/users/notifications:
+ *   get:
+ *     summary: Récupère les notifications de l'utilisateur
+ *     tags: [User]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Liste des notifications récupérée avec succès
+ *         content:
+ *           application/json:
+ *             example:
+ *               notifications:
+ *                 - id: 1
+ *                   message: "Nouvelle mise à jour disponible"
+ *                   date: "2024-07-08T12:00:00Z"
+ *                 - id: 2
+ *                   message: "Votre commande a été expédiée"
+ *                   date: "2024-07-09T15:30:00Z"
+ *       401:
+ *         description: Non autorisé - Token manquant ou invalide
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Token invalide ou expiré"
+ *       500:
+ *         description: Erreur interne du serveur
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Erreur interne du serveur"
+ */
+router.get("/notifications", IsAuthenticated, getUserNotifications);
 
 module.exports = router;

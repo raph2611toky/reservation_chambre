@@ -132,3 +132,13 @@ exports.getUserStats = async (req, res) => {
         res.status(500).json({ error: "Erreur interne du serveur" });
     }
 };
+
+exports.getUserNotifications = async (req, res) => {
+    try {
+        const notifications = await User.getUserNotifications(req.user.id);
+        res.status(200).json(notifications);
+    } catch (error) {
+        console.error("Erreur lors de la récupération des notifications:", error);
+        res.status(500).json({ error: "Erreur interne du serveur" });
+    }
+};
