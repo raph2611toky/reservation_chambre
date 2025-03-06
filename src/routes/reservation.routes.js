@@ -144,6 +144,8 @@ const errorHandler = require("../middlewares/error.handler");
  *   get:
  *     summary: Obtenir tous les reservations
  *     tags: [Reservations]
+ *     security:
+ *       - BearerAuth: []
  *     responses:
  *       200:
  *         description: Liste des reservations
@@ -154,7 +156,7 @@ const errorHandler = require("../middlewares/error.handler");
  *               items:
  *                 $ref: '#/components/schemas/Reservation'
  */
-router.get("/", reservationController.getAll);
+router.get("/", IsAuthenticatedAdmin, reservationController.getAll);
 
 /**
  * @swagger
