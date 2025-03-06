@@ -145,7 +145,27 @@ router.get("/profile", IsAuthenticated, getUser);
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/User'
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *               - name
+ *               - phone
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: admin@example.com
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 example: "Admin@123"
+ *               name:
+ *                 type: string
+ *                 example: "Admin User"
+ *               phone:
+ *                 type: string
+ *                 example: "+261341234567"
  *     responses:
  *       201:
  *         description: Utilisateur créé avec succès
