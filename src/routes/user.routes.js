@@ -6,7 +6,9 @@ const {
     updateUser,
     deleteAccount,
     getAllUsers,
-    getUser
+    getUser,
+    logout,
+    getUserStats 
  } = require("../controllers/user.controller");
 const { 
     createUserValidationRules, 
@@ -260,5 +262,45 @@ router.put("/change", IsAuthenticated, updateUserValidationRules, validateHandle
  *               error: "Erreur interne du serveur"
  */
 router.delete("/delete", IsAuthenticated, deleteAccount);
+
+/**
+ * @swagger
+ * /api/users/logout:
+ *   post:
+ *     summary: Déconnexion de l'utilisateur
+ *     tags: [Users]
+ *     security:
+ *       - BearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Déconnexion réussie
+ *       500:
+ *         description: Erreur interne du serveur
+ */
+router.post("/logout", IsAuthenticated, logout);
+
+/**
+ * @swagger
+ * /api/users/stats:
+ *   get:
+ *     summary: Récupérer les statistiques globales des utilisateurs
+ *     description: Retourne le nombre total d'utilisateurs, le nombre d'admins, de clients et d'utilisateurs actifs.
+ *     tags: [Users]
+ *     security:
+ *       - BearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Statistiques des utilisateurs
+ *         content:
+ *           application/json:
+ *             example:
+ *               nombre_total_user: 100
+ *               nombre_admin: 10
+ *               nombre_client: 90
+ *               user_actif: 25
+ *       500:
+ *         description: Erreur interne du serveur
+ */
+router.get("/stats", IsAuthenticatedAdmin, getUserStats);
 
 module.exports = router;
