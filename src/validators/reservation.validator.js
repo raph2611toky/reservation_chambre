@@ -1,4 +1,4 @@
-const { body } = require("express-validator");
+const { body,param } = require("express-validator");
 const roomServices = require("../services/database/room.services");
 const reservationServices = require("../services/database/reservation.services");
 const { StatutReservation } = require("@prisma/client");
@@ -64,22 +64,29 @@ const roomExist= [
 const myReservationRule = [
     body("room_id")
     .custom(async (value,{req})=>{
+        
         const reservation = await reservationServices.getById(parseInt(req.params.id))
+        if(!reservation){
+            throw new Error("Cette reservation non trouvé");
+        }
         
         if(reservation.user_id!= req.user.id){
             throw new Error("Cette reservation n'est pas le votre !");
         }
         return true
-    })    
+    })  
 ]
 
 const reservationAttente = [
-    body("room_id")
-    .custom(async (value,{req})=>{
-        const reservation = await reservationServices.getById(parseInt(req.params.id))
-        if(reservation.status != StatutReservation.ATTENTE){
+    param("id")
+    .custom(async (value)=>{
+        const reservation = await reservationServices.getById(parseInt(value))
+        if(!reservation){
+            throw new Error("Cette reservation non trouvé");
+        }
+        
+        if(reservation.status !== StatutReservation.ATTENTE){
             throw new Error("Seul reservation en attent peut être modifier !");
-
         }
         return true
     })
