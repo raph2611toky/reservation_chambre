@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { 
     register,
+    registerAdmin,
     login,
     updateUser,
     deleteAccount,
@@ -152,7 +153,6 @@ router.get("/profile", IsAuthenticated, getUser);
  *           application/json:
  *             example:
  *               email: "jean.dupont@example.com"
- *               token: "eyJhbGciOi..."
  *       400:
  *         description: Erreur de validation
  *         content:
@@ -161,6 +161,56 @@ router.get("/profile", IsAuthenticated, getUser);
  *               error: "Cet utilisateur s'est dejà enregistré"
  */
 router.post("/register", createUserValidationRules, validateHandler, register);
+
+/**
+ * @swagger
+ * /admin/register:
+ *   post:
+ *     summary: Enregistrer un administrateur
+ *     tags: [Authentification]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *               - name
+ *               - phone
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: admin@example.com
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 example: "Admin@123"
+ *               name:
+ *                 type: string
+ *                 example: "Admin User"
+ *               phone:
+ *                 type: string
+ *                 example: "+261341234567"
+ *     responses:
+ *       201:
+ *         description: Administrateur créé avec succès
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 email:
+ *                   type: string
+ *                   example: admin@example.com
+ *       401:
+ *         description: L'administrateur existe déjà
+ *       500:
+ *         description: Erreur interne du serveur
+ */
+router.post("/admin/register", authController.registerAdmin);
 
 /**
  * @swagger
