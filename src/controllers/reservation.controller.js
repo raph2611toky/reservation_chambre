@@ -57,4 +57,17 @@ exports.cancelReservation = async (req, res) => {
 };
 
 
+exports.getStats = async (req, res)=> {
+  try {
+    // console.log("🟢 Envoi de la réponse à l'API...");
+    const reservation= await reservationService.getStats();
+    // console.log("🔵 Données envoyées:", JSON.stringify(reservation, null, 2)); // Affiche la réponse en JSON
+    res.json(reservation);
+  } catch (error) {
+    console.log("❌ Erreur dans getStats:", error);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+}
+
+
 

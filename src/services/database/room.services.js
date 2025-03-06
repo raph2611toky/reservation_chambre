@@ -31,6 +31,7 @@ class RoomService {
   async filterRoomByCategory() {
     try {
       const rooms = await prisma.room.findMany();
+
       var res = {}; 
       rooms.forEach(room => {
           if (!res[room.category]) {
@@ -151,6 +152,38 @@ class RoomService {
     }
   }
   
+  // dashboard room
+  // stat : total room, total type, nombre room in each type
+  async getStats() {
+    try {
+      const totalRooms = await prisma.room.count();
+  
+      const totalCategories = await prisma.room.groupBy({
+        by: ["category"],
+        _count: { category: true }
+      });
+  
+      const roomsPerCategories = await prisma.room.groupBy({
+        by: ["category"],
+        _count: { id: true }
+      });
+  
+      const roomsByCategories = roomsPerCategories.map(item => ({
+        category: item.category,
+        count: item._count.id
+      }));
+  
+      return {
+        totalRooms,
+        totalCategories: totalCategories.length,
+        roomsByCategories
+      };
+    } catch (error) {
+      console.error("Erreur lors de la récupération des stats des rooms:", error);
+      throw new Error("Impossible de récupérer les statistiques des rooms.");
+    }
+
+  }
 
 }
 

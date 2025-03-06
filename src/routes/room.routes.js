@@ -3,6 +3,7 @@ const router = express.Router();
 const roomController = require("../controllers/room.controller");
 const { updateRoomValidationRules, createRoomValidationRules } = require("../validators/room.validator");
 const validateHandler = require("../middlewares/error.handler");
+const { IsAuthenticatedAdmin } = require("../middlewares/auth.middleware");
 
 /**
  * @swagger
@@ -109,6 +110,8 @@ router.get("/find/:id", roomController.getRoomById);
  *   post:
  *     summary: Créer un chambre
  *     tags: [Rooms]
+ *     security:
+ *       - BearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -125,7 +128,7 @@ router.get("/find/:id", roomController.getRoomById);
  *       400:
  *         description: Erreur de validation
  */
-router.post("/", 
+router.post("/",IsAuthenticatedAdmin, 
     createRoomValidationRules,
     validateHandler,
     roomController.createRoom);
@@ -136,6 +139,8 @@ router.post("/",
  *   put:
  *     summary: Mettre à jour un chambre
  *     tags: [Rooms]
+ *     security:
+ *       - BearerAuth: []
  *     parameters:
  *       - name: id
  *         in: path
@@ -159,7 +164,7 @@ router.post("/",
  *       404:
  *         description: Chambre non trouvé
  */
-router.put("/:id", 
+router.put("/:id", IsAuthenticatedAdmin,
     updateRoomValidationRules, 
     validateHandler,
     roomController.updateRoom);
@@ -170,6 +175,8 @@ router.put("/:id",
  *   delete:
  *     summary: Supprimer une chambre
  *     tags: [Rooms]
+ *     security:
+ *       - BearerAuth: []
  *     parameters:
  *       - name: id
  *         in: path
@@ -183,7 +190,7 @@ router.put("/:id",
  *       404:
  *         description: Chambre non trouvé
  */
-router.delete("/:id", roomController.deleteRoom);
+router.delete("/:id", IsAuthenticatedAdmin, roomController.deleteRoom);
 
 
 /**
@@ -323,5 +330,42 @@ router.post("/availability", roomController.getAvailableRooms);
  *                 $ref: '#/components/schemas/Room'
  */
 router.post("/planning/:id", roomController.getRoomSchedule);
+
+/**
+ * @swagger
+ * /api/rooms/stats:
+ *   get:
+ *     summary: Obtenir tous les statistiques des chambres
+ *     tags: [Statistics]
+ *     security:
+ *       - BearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Statistiques des chambres
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 totalRooms:
+ *                   type: integer
+ *                   example: 50
+ *                 totalCategories:
+ *                   type: integer
+ *                   example: 3
+ *                 roomsByCategories:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       type:
+ *                         type: string
+ *                         example: "Suite"
+ *                       count:
+ *                         type: integer
+ *                         example: 10
+ */
+router.get("/stats", IsAuthenticatedAdmin, roomController.getRoomStats);
+
 
 module.exports = router;
