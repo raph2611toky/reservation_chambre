@@ -414,7 +414,7 @@ router.get("/notifications", IsAuthenticated, getUserNotifications);
 /**
  * @swagger
  * /api/users/notification-preference:
- *   patch:
+ *   post:
  *     summary: Modifier la préférence de notification de l'utilisateur
  *     tags: [Users]
  *     security:
@@ -458,6 +458,6 @@ router.get("/notifications", IsAuthenticated, getUserNotifications);
  *             example:
  *               error: "Erreur interne du serveur"
  */
-router.patch("/notification-preference", IsAuthenticated, updateNotificationPreference);
+router.post("/notification-preference", IsAuthenticated, updateNotificationPreference);
 
 module.exports = router;
