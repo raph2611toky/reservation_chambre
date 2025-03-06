@@ -1,7 +1,9 @@
 
 class Reservation {
     constructor(id, user_id, user, room_id, room, status, 
-      date_debut, date_fin, created_at =null, updated_at=null) 
+      date_debut, date_fin, created_at =null, updated_at=null,
+      montant=0
+    ) 
       {
       this.id = id;
       this.user_id = user_id;
@@ -13,6 +15,7 @@ class Reservation {
       this.date_fin = date_fin;
       this.created_at = created_at;
       this.updated_at = updated_at;
+      this.montant = montant;
     }
   
   }

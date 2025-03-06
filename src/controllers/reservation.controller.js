@@ -23,7 +23,12 @@ exports.getById = async (req, res)=>{
 
 exports.makeReservation = async (req, res)=>{
     try {
-        const reservation = await reservationService.makeReservation(req.body);
+        data={}
+        data.room_id= req.body.room_id
+        data.date_debut= req.body.date_debut
+        data.date_fin= req.body.date_fin
+        data.date_fin= parseInt(req.user.id)
+        const reservation = await reservationService.makeReservation(data);
         res.status(201).json(reservation);
     }
     catch (error) {
@@ -35,6 +40,10 @@ exports.makeReservation = async (req, res)=>{
 
 exports.updateReservation = async (req, res) => {
   try {
+    data={}
+    data.room_id= req.body.room_id
+    data.date_debut= req.body.date_debut
+    data.date_fin= req.body.date_fin
     const reservation= await reservationService.updateReservation(parseInt(req.params.id), req.body);
     res.json(reservation);
   } catch (error) {
@@ -70,4 +79,25 @@ exports.getStats = async (req, res)=> {
 }
 
 
+exports.confirmReservation = async (req, res)=>{
+  try {
+    const reservation= await reservationService.confirmReservation(parseInt(req.params.id));
+    
+    res.json(reservation);
+  } catch (error) {
+    console.log(error);  
+    res.status(500).json({ error: "Erreur serveur." });
+  }
+}
+
+
+exports.refuseReservation = async (req, res)=>{
+  try {
+    const reservation= await reservationService.refuseReservation(parseInt(req.params.id));
+    res.json(reservation);
+  } catch (error) {
+    console.log(error);  
+    res.status(500).json({ error: "Erreur serveur." });
+  }
+}
 

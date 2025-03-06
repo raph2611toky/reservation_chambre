@@ -2,7 +2,9 @@ const express = require("express");
 const router = express.Router();
 const reservationController = require("../controllers/reservation.controller");
 const reservationServices = require("../services/database/reservation.services");
-const { IsAuthenticatedAdmin } = require("../middlewares/auth.middleware");
+const { IsAuthenticated,IsAuthenticatedAdmin } = require("../middlewares/auth.middleware");
+const { reservationRule, roomExist, myReservationRule, reservationAttente } = require("../validators/reservation.validator");
+const errorHandler = require("../middlewares/error.handler");
 // const { updateRoomValidationRules, createRoomValidationRules } = require("../validators/room.validator");
 // const validateHandler = require("../middlewares/error.handler");
 
@@ -186,12 +188,26 @@ router.get("/find/:id", reservationController.getById);
  *   post:
  *     summary: Faire une reservation
  *     tags: [Reservations]
+ *     security:
+ *       - BearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Reservation'
+ *             type: object
+ *             properties:
+ *               room_id:
+ *                 type: integer
+ *                 example: 3
+ *               date_debut:
+ *                 type: string
+ *                 format: date-time
+ *                 example: "2024-03-02T12:00:00Z"
+ *               date_fin:
+ *                 type: string
+ *                 format: date-time
+ *                 example: "2024-03-05T12:00:00Z"
  *     responses:
  *       201:
  *         description: Reservation créé avec succès
@@ -202,7 +218,7 @@ router.get("/find/:id", reservationController.getById);
  *       400:
  *         description: Erreur de validation
  */
-router.post("/make",reservationController.makeReservation);
+router.post("/make",IsAuthenticated, roomExist, reservationRule , errorHandler, reservationController.makeReservation);
 
 
 /**
@@ -211,6 +227,8 @@ router.post("/make",reservationController.makeReservation);
  *   put:
  *     summary: Mettre à jour un reservation
  *     tags: [Reservations]
+ *     security:
+ *       - BearerAuth: []
  *     parameters:
  *       - name: id
  *         in: path
@@ -223,7 +241,19 @@ router.post("/make",reservationController.makeReservation);
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Reservation'
+ *             type: object
+ *             properties:
+ *               room_id:
+ *                 type: integer
+ *                 example: 3
+ *               date_debut:
+ *                 type: string
+ *                 format: date-time
+ *                 example: "2024-03-02T12:00:00Z"
+ *               date_fin:
+ *                 type: string
+ *                 format: date-time
+ *                 example: "2024-03-05T12:00:00Z"
  *     responses:
  *       200:
  *         description: Reservation mis à jour
@@ -234,15 +264,17 @@ router.post("/make",reservationController.makeReservation);
  *       404:
  *         description: Reservation non trouvé
  */
-router.put("/update/:id", reservationController.updateReservation);
+router.put("/update/:id", IsAuthenticated, roomExist, myReservationRule, reservationAttente, reservationRule , errorHandler , reservationController.updateReservation);
 
 
 /**
  * @swagger
  * /api/reservations/cancel/{id}:
- *   post:
+ *   delete:
  *     summary: Annuler une reservation
  *     tags: [Reservations]
+ *     security:
+ *       - BearerAuth: []
  *     parameters:
  *       - name: id
  *         in: path
@@ -260,7 +292,62 @@ router.put("/update/:id", reservationController.updateReservation);
  *               items:
  *                 $ref: '#/components/schemas/Reservation'
  */
-router.post("/cancel/:id", reservationController.cancelReservation);
+router.delete("/cancel/:id", IsAuthenticated, myReservationRule, reservationAttente , reservationController.cancelReservation);
+
+
+/**
+ * @swagger
+ * /api/reservations/confirm/{id}:
+ *   post:
+ *     summary: Confirmer une reservation
+ *     tags: [Reservations]
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID du reservation à confirmer
+ *     responses:
+ *       200:
+ *         description: Reservation confirmé
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Reservation'
+ */
+router.post("/confirm/:id", IsAuthenticatedAdmin , reservationAttente , reservationController.confirmReservation);
+
+/**
+ * @swagger
+ * /api/reservations/refuse/{id}:
+ *   delete:
+ *     summary: Refuser une reservation
+ *     tags: [Reservations]
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID du reservation à refuser
+ *     responses:
+ *       200:
+ *         description: Reservation refusé
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Reservation'
+ */
+router.delete("/refuse/:id", IsAuthenticatedAdmin , reservationAttente , reservationController.refuseReservation);
 
 
 /**

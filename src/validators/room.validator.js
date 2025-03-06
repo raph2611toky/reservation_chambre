@@ -1,4 +1,6 @@
-const { body } = require("express-validator");
+const { body, param } = require("express-validator");
+const roomServices = require("../services/database/room.services");
+const reservationServices = require("../services/database/reservation.services");
 
 const createRoomValidationRules = [
   body("label")
@@ -66,10 +68,11 @@ const updateRoomValidationRules = [
     .optional()  
     .isURL()
     .withMessage("Le format de url n'est pas valide")
+];
 
-    
-  ];
 
-  
 
-module.exports = { createRoomValidationRules, updateRoomValidationRules };
+module.exports = { 
+  createRoomValidationRules, 
+  updateRoomValidationRules 
+};
