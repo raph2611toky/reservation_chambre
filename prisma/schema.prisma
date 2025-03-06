@@ -62,6 +62,7 @@ model Reservation {
   status     StatutReservation @default(ATTENTE)
   created_at DateTime          @default(now())
   updated_at DateTime          @updatedAt
+  montant    Int               @default(0)
 }
 
 model Notification {
