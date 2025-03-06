@@ -31,17 +31,37 @@ exports.register = async (req, res) => {
         if (user) {
             return res.status(401).json({ error: "Cet utilisateur s'est dejà enregistré" });
         }
-        const newUser = await User.create(req.body);
-        const token = generateToken({ id: newUser.id, role: newUser.role });
+        const newUser = await User.create({ ...req.body, role: "CLIENT" });
+        
         const message_to_send = `Nous vous confirmons que votre inscription sur notre plateforme a été réalisée avec succès.
 Vous pouvez dès à présent accéder à votre espace personnel et profiter de nos services.
 Si vous avez la moindre question, notre équipe reste à votre disposition.`;
         const title = "Confirmation de votre inscription";
         sendNotification(newUser.id, message_to_send,title)        
 
-        res.status(201).json({ email: newUser.email, token});
+        res.status(201).json({ email: newUser.email });
     } catch (error) {
         console.error("Erreur lors de la création de l'utilisateur:", error);
+        res.status(500).json({ error: "Erreur interne du serveur" });
+    }
+};
+
+exports.registerAdmin = async (req, res) => {
+    try {
+        const user = await User.findByEmail(req.body.email);
+        if (user) {
+            return res.status(401).json({ error: "Cet administrateur s'est déjà enregistré" });
+        }
+
+        const newAdmin = await User.create({ ...req.body, role: "ADMIN" });
+
+        const message_to_send = `Nous vous confirmons que votre compte administrateur a été créé avec succès.`;
+        const title = "Création de votre compte administrateur";
+        sendNotification(newAdmin.id, message_to_send, title);
+
+        res.status(201).json({ email: newAdmin.email });
+    } catch (error) {
+        console.error("Erreur lors de la création de l'administrateur:", error);
         res.status(500).json({ error: "Erreur interne du serveur" });
     }
 };
