@@ -210,7 +210,7 @@ router.post("/register", createUserValidationRules, validateHandler, register);
  *       500:
  *         description: Erreur interne du serveur
  */
-router.post("/admin/register", registerAdmin);
+router.post("/admin/register", createUserValidationRules, validateHandler, registerAdmin);
 
 /**
  * @swagger
@@ -327,7 +327,7 @@ router.delete("/delete", IsAuthenticated, deleteAccount);
  *       500:
  *         description: Erreur interne du serveur
  */
-router.post("/logout", IsAuthenticated, logout);
+router.put("/logout", IsAuthenticated, logout);
 
 /**
  * @swagger
