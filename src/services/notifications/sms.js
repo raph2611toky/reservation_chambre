@@ -12,3 +12,5 @@ async function sendSms(phone_number,message){
         })
         .then(message => console.log(message.sid));
 }
+
+module.exports = { sendSms }
