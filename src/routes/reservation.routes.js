@@ -3,7 +3,7 @@ const router = express.Router();
 const reservationController = require("../controllers/reservation.controller");
 const reservationServices = require("../services/database/reservation.services");
 const { IsAuthenticated,IsAuthenticatedAdmin } = require("../middlewares/auth.middleware");
-const { reservationRule, roomExist, myReservationRule, reservationAttente } = require("../validators/reservation.validator");
+const { reservationRule, roomExist, myReservationRule, reservationAttente, roomAvailable } = require("../validators/reservation.validator");
 const errorHandler = require("../middlewares/error.handler");
 // const { updateRoomValidationRules, createRoomValidationRules } = require("../validators/room.validator");
 // const validateHandler = require("../middlewares/error.handler");
@@ -216,9 +216,9 @@ router.get("/find/:id", reservationController.getById);
  *             schema:
  *               $ref: '#/components/schemas/Reservation'
  *       400:
- *         description: Erreur de validation
+ *         description: Erreur de validationf
  */
-router.post("/make",IsAuthenticated, roomExist, reservationRule , errorHandler, reservationController.makeReservation);
+router.post("/make",IsAuthenticated, roomExist, reservationRule , roomAvailable, errorHandler, reservationController.makeReservation);
 
 
 /**
@@ -264,7 +264,7 @@ router.post("/make",IsAuthenticated, roomExist, reservationRule , errorHandler, 
  *       404:
  *         description: Reservation non trouvé
  */
-router.put("/update/:id", IsAuthenticated, roomExist, myReservationRule, reservationAttente, reservationRule , errorHandler , reservationController.updateReservation);
+router.put("/update/:id", IsAuthenticated, roomExist, myReservationRule, reservationAttente, reservationRule , roomAvailable, errorHandler , reservationController.updateReservation);
 
 
 /**
@@ -288,11 +288,10 @@ router.put("/update/:id", IsAuthenticated, roomExist, myReservationRule, reserva
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Reservation'
+ *               type: string
+ *               example: "Reservation Annulé"
  */
-router.delete("/cancel/:id", IsAuthenticated, myReservationRule, reservationAttente , reservationController.cancelReservation);
+router.delete("/cancel/:id", IsAuthenticated, myReservationRule, reservationAttente , errorHandler, reservationController.cancelReservation);
 
 
 /**
@@ -316,11 +315,10 @@ router.delete("/cancel/:id", IsAuthenticated, myReservationRule, reservationAtte
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Reservation'
+ *               type: string
+ *               example: "Reservation Confirmé"
  */
-router.post("/confirm/:id", IsAuthenticatedAdmin , reservationAttente , reservationController.confirmReservation);
+router.post("/confirm/:id", IsAuthenticatedAdmin , reservationAttente , errorHandler , reservationController.confirmReservation);
 
 /**
  * @swagger
@@ -343,11 +341,10 @@ router.post("/confirm/:id", IsAuthenticatedAdmin , reservationAttente , reservat
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Reservation'
+ *               type: string
+ *               example: "Reservation Refusé !"
  */
-router.delete("/refuse/:id", IsAuthenticatedAdmin , reservationAttente , reservationController.refuseReservation);
+router.delete("/refuse/:id", IsAuthenticatedAdmin , reservationAttente , errorHandler, reservationController.refuseReservation);
 
 
 /**
